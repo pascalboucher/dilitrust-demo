@@ -9,10 +9,11 @@ import {
     faDownload,
     faTrash,
     faChevronLeft,
+    faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add([faUpload, faDownload, faTrash, faChevronLeft]);
+library.add([faUpload, faDownload, faTrash, faChevronLeft, faXmark]);
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";

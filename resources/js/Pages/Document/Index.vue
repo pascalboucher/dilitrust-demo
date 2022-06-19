@@ -1,11 +1,13 @@
 <script setup>
 import { computed } from "vue";
 import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
+import ValidationErrors from "@/Components/ValidationErrors.vue";
 import { Head, Link } from "@inertiajs/inertia-vue3";
-import FilesList from "@/Components/FilesList.vue";
+import ListDocuments from "@/Components/ListDocuments.vue";
 
 const props = defineProps({
     documents: Array,
+    status: String,
 });
 
 const documentsCount = computed(() => {
@@ -34,6 +36,12 @@ const documentsCount = computed(() => {
             </div>
         </template>
 
-        <FilesList />
+        <ValidationErrors class="mb-4" />
+
+        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+            {{ status }}
+        </div>
+
+        <ListDocuments />
     </AuthenticatedLayout>
 </template>
