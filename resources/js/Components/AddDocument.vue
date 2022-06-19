@@ -11,8 +11,7 @@ const form = useForm({
 });
 
 const submit = () => {
-    console.log("form", form.file);
-    //form.post(route("login"), {});
+    form.post(route("documents.store"));
 };
 
 const onFileChange = (e) => {

@@ -1,5 +1,6 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
+import { useTimeout } from "vue-composable";
 import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import { Head, Link } from "@inertiajs/inertia-vue3";
@@ -13,6 +14,12 @@ const props = defineProps({
 const documentsCount = computed(() => {
     return props.documents.length;
 });
+
+const hideStatus = ref(false);
+
+if (props.status) {
+    useTimeout(() => (hideStatus.value = true), 3000);
+}
 </script>
 
 <template>
@@ -38,8 +45,14 @@ const documentsCount = computed(() => {
 
         <ValidationErrors class="mb-4" />
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
+        <div
+            v-if="status"
+            class="mx-auto w-full sm:max-w-md px-1 sm:px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
+            :class="{ invisible: hideStatus }"
+        >
+            <div class="font-bold text-center text-sm text-green-600">
+                {{ status }}
+            </div>
         </div>
 
         <ListDocuments />

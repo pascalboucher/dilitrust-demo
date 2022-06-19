@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDocumentRequest;
 use App\Models\Document;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class DocumentController extends Controller
@@ -17,6 +18,7 @@ class DocumentController extends Controller
     {
         return Inertia::render('Document/Index', [
             'documents' => [1,2,3], 
+            'status' => session('status'),
         ]);
     }
 
@@ -27,9 +29,7 @@ class DocumentController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Document/Create', [
-            'status' => session('status'),
-        ]);
+        return Inertia::render('Document/Create');
     }
 
     /**
@@ -40,7 +40,8 @@ class DocumentController extends Controller
      */
     public function store(StoreDocumentRequest $request)
     {
-        //
+        return Redirect::route('documents.index')
+            ->with('status', 'Your document was uploaded successfully!');
     }
 
     /**
@@ -51,7 +52,7 @@ class DocumentController extends Controller
      */
     public function show(Document $document)
     {
-        //
+        // download file here
     }
 
     /**
@@ -62,6 +63,6 @@ class DocumentController extends Controller
      */
     public function destroy(Document $document)
     {
-        //
+        // should refactor route to enable bulk delete
     }
 }
