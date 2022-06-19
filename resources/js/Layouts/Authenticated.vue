@@ -18,7 +18,7 @@ const showingNavigationDropdown = ref(false);
                     <div class="flex justify-between h-16">
                         <div class="flex items-center sm:hidden">
                             <ResponsiveNavLink
-                                :href="route('documents')"
+                                :href="route('documents.index')"
                                 :active="true"
                             >
                                 Dashboard
@@ -31,7 +31,7 @@ const showingNavigationDropdown = ref(false);
                                     Home
                                 </NavLink>
                                 <NavLink
-                                    :href="route('documents')"
+                                    :href="route('documents.index')"
                                     :active="true"
                                 >
                                     Dashboard

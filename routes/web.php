@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DocumentController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,16 +23,8 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/documents', function () {
-    return Inertia::render('Document/Index', [
-        'documents' => [1,2,3], 
-    ]);
-})->middleware(['auth'])->name('documents');
-
-Route::get('/documents/create', function () {
-    return Inertia::render('Document/Create', [
-        'status' => session('status'),
-    ]);
-})->middleware(['auth'])->name('documents.create');
+Route::resource('documents', DocumentController::class)->except([
+    'edit', 'update',
+])->middleware(['auth']);
 
 require __DIR__.'/auth.php';

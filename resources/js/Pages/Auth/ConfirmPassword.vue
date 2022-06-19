@@ -28,7 +28,7 @@ const submit = () => {
             <div class="fixed top-0 right-0 px-6 py-4 block">
                 <Link
                     v-if="$page.props.auth.user"
-                    :href="route('documents')"
+                    :href="route('documents.index')"
                     class="ml-4 text-sm text-gray-700 underline"
                 >
                     Dashboard
