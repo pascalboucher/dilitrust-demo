@@ -4,10 +4,15 @@ import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/inertia-vue3";
 import { InertiaProgress } from "@inertiajs/progress";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faUpload } from "@fortawesome/free-solid-svg-icons";
+import {
+    faUpload,
+    faDownload,
+    faTrash,
+    faChevronLeft,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
-library.add(faUpload);
+library.add([faUpload, faDownload, faTrash, faChevronLeft]);
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText || "Laravel";

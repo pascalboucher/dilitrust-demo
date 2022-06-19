@@ -22,8 +22,16 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/documents', function () {
+    return Inertia::render('Document/Index', [
+        'documents' => [1,2,3], 
+    ]);
+})->middleware(['auth'])->name('documents');
+
+Route::get('/documents/create', function () {
+    return Inertia::render('Document/Create', [
+        'status' => session('status'),
+    ]);
+})->middleware(['auth'])->name('documents.create');
 
 require __DIR__.'/auth.php';

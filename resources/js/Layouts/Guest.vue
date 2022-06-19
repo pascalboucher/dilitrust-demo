@@ -12,7 +12,10 @@ defineProps({
     >
         <div class="fixed top-0 right-0 px-6 py-4 block">
             <slot name="nav">
-                <Link href="/" class="text-sm text-gray-700 underline">
+                <Link
+                    :href="route('home')"
+                    class="text-sm text-gray-700 underline"
+                >
                     Home
                 </Link>
             </slot>

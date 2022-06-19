@@ -18,8 +18,8 @@ const showingNavigationDropdown = ref(false);
                     <div class="flex justify-between h-16">
                         <div class="flex items-center sm:hidden">
                             <ResponsiveNavLink
-                                :href="route('dashboard')"
-                                :active="route().current('dashboard')"
+                                :href="route('documents')"
+                                :active="true"
                             >
                                 Dashboard
                             </ResponsiveNavLink>
@@ -27,15 +27,12 @@ const showingNavigationDropdown = ref(false);
                         <div class="flex">
                             <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:flex">
-                                <NavLink
-                                    :href="route('home')"
-                                    :active="route().current('home')"
-                                >
+                                <NavLink :href="route('home')" :active="false">
                                     Home
                                 </NavLink>
                                 <NavLink
-                                    :href="route('dashboard')"
-                                    :active="route().current('dashboard')"
+                                    :href="route('documents')"
+                                    :active="true"
                                 >
                                     Dashboard
                                 </NavLink>
@@ -137,7 +134,7 @@ const showingNavigationDropdown = ref(false);
                     <div class="pt-2 pb-3 space-y-1">
                         <ResponsiveNavLink
                             :href="route('home')"
-                            :active="route().current('home')"
+                            :active="false"
                         >
                             Home
                         </ResponsiveNavLink>
@@ -167,9 +164,20 @@ const showingNavigationDropdown = ref(false);
                 </div>
             </nav>
 
+            <!-- Page Heading -->
+            <header class="bg-white shadow" v-if="$slots.header">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    <slot name="header" />
+                </div>
+            </header>
+
             <!-- Page Content -->
             <main>
-                <slot />
+                <div class="py-12">
+                    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                        <slot />
+                    </div>
+                </div>
             </main>
         </div>
     </div>
