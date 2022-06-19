@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue";
 import Button from "@/Components/Button.vue";
 import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
@@ -10,6 +11,9 @@ defineProps({
 
 const title = "Add document";
 
+const url = ref("");
+const fileType = ref("");
+
 const form = useForm({
     file: null,
 });
@@ -17,6 +21,12 @@ const form = useForm({
 const submit = () => {
     console.log("form", form.file);
     //form.post(route("login"), {});
+};
+
+const onFileChange = (e) => {
+    const file = e.target.files[0];
+    fileType.value = file.type;
+    url.value = URL.createObjectURL(file);
 };
 </script>
 
@@ -46,11 +56,27 @@ const submit = () => {
         </template>
 
         <div
-            class="mx-auto w-full sm:max-w-md px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
+            class="mx-auto w-full sm:max-w-md px-1 sm:px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
         >
             <form @submit.prevent="submit">
                 <div class="flex flex-col items-end justify-end">
-                    <div class="flex justify-center items-center w-full">
+                    <template v-if="url">
+                        <div
+                            v-if="fileType === 'application/pdf'"
+                            class="relative overflow-hidden h-0 w-full pb-[100%]"
+                        >
+                            <embed
+                                v-if="fileType === 'application/pdf'"
+                                :src="url"
+                                width="400"
+                                height="500"
+                                class="absolute w-full h-full"
+                            />
+                        </div>
+                        <img v-else class="max-w-full" :src="url" />
+                    </template>
+
+                    <div v-else class="flex justify-center items-center w-full">
                         <label
                             for="dropzone-file"
                             class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
@@ -91,6 +117,7 @@ const submit = () => {
                                 class="hidden"
                                 accept="image/png, image/jpeg, application/pdf"
                                 @input="form.file = $event.target.files[0]"
+                                @change="onFileChange"
                             />
                             <progress
                                 v-if="form.progress"
