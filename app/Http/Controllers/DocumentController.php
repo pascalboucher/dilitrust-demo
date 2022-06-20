@@ -6,6 +6,7 @@ use App\Http\Requests\StoreDocumentRequest;
 use App\Models\Document;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Illuminate\Support\Str;
 
 class DocumentController extends Controller
 {
@@ -16,6 +17,8 @@ class DocumentController extends Controller
      */
     public function index()
     {
+        // make api responses for documents
+
         return Inertia::render('Document/Index', [
             'documents' => [1,2,3], 
             'status' => session('status'),
@@ -40,6 +43,18 @@ class DocumentController extends Controller
      */
     public function store(StoreDocumentRequest $request)
     {
+        // TODO missing form request validations
+
+        if ($request->file('file')->isValid()) {
+            $document = new Document([
+                'name' => Str::of($request->file->getClientOriginalName())->limit(20),
+                'type' => $request->file->extension(),
+                'size' => $request->file->getSize(),
+                'path' => $request->file->store('documents', ['visibility' => 'private']),
+            ]);
+            $request->user()->documents()->save($document);
+        }
+
         return Redirect::route('documents.index')
             ->with('status', 'Your document was uploaded successfully!');
     }
