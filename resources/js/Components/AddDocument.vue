@@ -90,7 +90,7 @@ const removePreview = (e) => {
                                 >
                             </p>
                             <p class="text-xs text-gray-500 dark:text-gray-400">
-                                PNG, JPG or PDF (MAX. 2MB)
+                                PNG, JPG or PDF (MAX. 5MB)
                             </p>
                         </div>
                         <input

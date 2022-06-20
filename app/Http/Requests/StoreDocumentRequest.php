@@ -24,7 +24,7 @@ class StoreDocumentRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'file' => ['required', 'file', 'mimes:jpg,pdf,png', 'max:5000'],
         ];
     }
 }

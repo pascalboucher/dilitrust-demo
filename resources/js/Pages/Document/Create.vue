@@ -1,8 +1,11 @@
 <script setup>
+import { computed } from "vue";
 import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
 import AddDocument from "@/Components/AddDocument.vue";
 import { Head, Link, useForm } from "@inertiajs/inertia-vue3";
+
+const errors = computed(() => usePage().props.value.errors);
 
 const title = "Add document";
 </script>
@@ -26,7 +29,12 @@ const title = "Add document";
             </div>
         </template>
 
-        <ValidationErrors class="mb-4" />
+        <div
+            v-if="hasErrors"
+            class="mx-auto w-full sm:max-w-md px-1 sm:px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg mb-5"
+        >
+            <ValidationErrors />
+        </div>
 
         <AddDocument />
     </AuthenticatedLayout>

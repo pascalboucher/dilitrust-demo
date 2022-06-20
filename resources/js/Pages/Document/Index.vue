@@ -20,6 +20,8 @@ const hideStatus = ref(false);
 if (props.status) {
     useTimeout(() => (hideStatus.value = true), 3000);
 }
+
+const errors = computed(() => usePage().props.value.errors);
 </script>
 
 <template>
@@ -43,7 +45,12 @@ if (props.status) {
             </div>
         </template>
 
-        <ValidationErrors class="mb-4" />
+        <div
+            v-if="hasErrors"
+            class="mx-auto w-full sm:max-w-md px-1 sm:px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
+        >
+            <ValidationErrors />
+        </div>
 
         <div
             v-if="status"

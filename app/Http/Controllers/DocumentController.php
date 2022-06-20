@@ -17,6 +17,7 @@ class DocumentController extends Controller
      */
     public function index()
     {
+        // make policies for who can view the file
         // make api responses for documents
 
         return Inertia::render('Document/Index', [
@@ -43,17 +44,14 @@ class DocumentController extends Controller
      */
     public function store(StoreDocumentRequest $request)
     {
-        // TODO missing form request validations
-
-        if ($request->file('file')->isValid()) {
-            $document = new Document([
-                'name' => Str::of($request->file->getClientOriginalName())->limit(20),
-                'type' => $request->file->extension(),
-                'size' => $request->file->getSize(),
-                'path' => $request->file->store('documents', ['visibility' => 'private']),
-            ]);
-            $request->user()->documents()->save($document);
-        }
+        $document = new Document([
+            'name' => Str::of($request->file->getClientOriginalName())->limit(20),
+            'type' => $request->file->extension(),
+            'size' => $request->file->getSize(),
+            'path' => $request->file->store('documents', ['visibility' => 'private']),
+        ]);
+        
+        $request->user()->documents()->save($document);
 
         return Redirect::route('documents.index')
             ->with('status', 'Your document was uploaded successfully!');
