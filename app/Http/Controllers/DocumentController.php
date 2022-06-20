@@ -84,11 +84,14 @@ class DocumentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Document  $document
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Document $document)
+    public function destroy(Request $request)
     {
-        // should refactor route to enable bulk delete
+        Document::whereIn('slug', $request->documents)->delete();
+
+        return Redirect::route('documents.index')
+            ->with('status', 'Your documents were successfully deleted');
     }
 }

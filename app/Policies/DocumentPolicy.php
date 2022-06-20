@@ -31,6 +31,6 @@ class DocumentPolicy
      */
     public function delete(User $user, Document $document)
     {
-        //
+        // validate that every document id in list belong to user
     }
 }

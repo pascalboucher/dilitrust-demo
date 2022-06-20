@@ -1,5 +1,5 @@
 <script setup>
-import { computed, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { Head, Link, usePage } from "@inertiajs/inertia-vue3";
 import { useTimeout } from "vue-composable";
 import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
@@ -11,18 +11,23 @@ const props = defineProps({
     status: String,
 });
 
+const hideStatus = ref(false);
+
 const documentsCount = computed(() => {
     return props.documents.length;
 });
-
-const hideStatus = ref(false);
-
-if (props.status) {
-    useTimeout(() => (hideStatus.value = true), 3000);
-}
-
 const errors = computed(() => usePage().props.value.errors);
 const hasErrors = computed(() => Object.keys(errors.value).length > 0);
+const flashStatus = () => {
+    hideStatus.value = false;
+    useTimeout(() => (hideStatus.value = true), 3000);
+};
+
+onMounted(() => {
+    if (props.status) {
+        flashStatus();
+    }
+});
 </script>
 
 <template>
@@ -56,13 +61,13 @@ const hasErrors = computed(() => Object.keys(errors.value).length > 0);
         <div
             v-if="status"
             class="mx-auto w-full sm:max-w-md px-1 sm:px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg"
-            :class="{ invisible: hideStatus }"
+            :class="{ hidden: hideStatus, 'mb-5': documents.length === 0 }"
         >
             <div class="font-bold text-center text-sm text-green-600">
                 {{ status }}
             </div>
         </div>
 
-        <ListDocuments :documents="documents" />
+        <ListDocuments @document-deleted="flashStatus" :documents="documents" />
     </AuthenticatedLayout>
 </template>

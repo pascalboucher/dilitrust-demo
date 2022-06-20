@@ -1,29 +1,42 @@
 <script setup>
-import { reactive, computed, watch } from "vue";
-import { Link } from "@inertiajs/inertia-vue3";
+import { ref, computed, watch } from "vue";
+import { Link, useForm } from "@inertiajs/inertia-vue3";
 import Checkbox from "@/Components/Checkbox.vue";
+import SubmitButton from "@/Components/Button.vue";
 
 const props = defineProps({
     documents: Array,
 });
 
-const state = reactive({
-    selected: [],
-    selectAll: false,
+const emit = defineEmits(["documentDeleted"]);
+
+const selectAll = ref(false);
+
+const form = useForm({
+    documents: [],
 });
 
+const submit = () => {
+    form.delete(route("documents.destroy"), {
+        onFinish: () => {
+            form.documents = [];
+            emit("documentDeleted");
+        },
+    });
+};
+
 watch(
-    () => state.selected,
-    (selected) => {
-        state.selectAll = selected.length === props.documents.length;
+    () => form.documents,
+    (documents) => {
+        selectAll.value = documents.length === props.documents.length;
     }
 );
 
-const updateCheckboxes = (e) => {
+const updateSelections = (e) => {
     if (e.target.checked) {
-        state.selected = props.documents.map((document) => document.id);
+        form.documents = props.documents.map((document) => document.id);
     } else {
-        state.selected = [];
+        form.documents = [];
     }
 };
 
@@ -31,12 +44,16 @@ const lastDocumentIndex = computed(() => {
     return props.documents.length - 1;
 });
 
-const hasSelections = computed(() => {
-    return state.selected.length > 0;
-});
-
 const hasDocuments = computed(() => {
     return props.documents.length > 0;
+});
+
+const hasSelections = computed(() => {
+    return form.documents.length > 0;
+});
+
+const selectionsCount = computed(() => {
+    return form.documents.length;
 });
 </script>
 
@@ -44,24 +61,30 @@ const hasDocuments = computed(() => {
     <div class="lg:w-10/12 sm:mx-auto">
         <template v-if="hasDocuments">
             <div v-show="hasSelections" class="absolute flex ml-1 sm:ml-0">
-                <Link
-                    href="/"
-                    class="uppercase font-bold text-sm text-red-500 hover:text-gray-700 transition ease-in-out duration-150"
-                >
-                    <font-awesome-icon icon="fa-solid fa-trash" class="mr-2" />
-                    Delete {{ state.selected.length }}
-                    {{ state.selected.length === 1 ? "document" : "documents" }}
-                </Link>
+                <form @submit.prevent="submit">
+                    <SubmitButton
+                        class="bg-red-500"
+                        :class="{ 'opacity-25': form.processing }"
+                        :disabled="form.processing"
+                    >
+                        <font-awesome-icon
+                            icon="fa-solid fa-trash"
+                            class="mr-2"
+                        />
+                        Delete {{ selectionsCount }}
+                        {{ selectionsCount === 1 ? "document" : "documents" }}
+                    </SubmitButton>
+                </form>
             </div>
-            <div class="h-6 sm:h-5"></div>
+            <div class="h-10 sm:h-10"></div>
             <div class="border-gray-200 w-100">
                 <div
                     class="grid grid-rows-2 grid-cols-2 sm:grid-cols-7 sm:grid-rows-1 gap-4 shadow p-2 bg-indigo-500 text-white font-bold uppercase"
                 >
                     <div class="border-r flex items-center justify-center">
                         <Checkbox
-                            v-model:checked="state.selectAll"
-                            @change="updateCheckboxes"
+                            v-model:checked="selectAll"
+                            @change="updateSelections"
                         />
                     </div>
                     <div
@@ -80,13 +103,13 @@ const hasDocuments = computed(() => {
                     class="grid grid-cols-2 sm:grid-cols-7 gap-4 px-2 py-4 border border-2 border-t-0 bg-white"
                 >
                     <template
-                        v-for="(document, index) in props.documents"
+                        v-for="(document, index) in documents"
                         :key="index"
                     >
                         <div class="flex items-center justify-center border-r">
                             <Checkbox
                                 :value="document.id"
-                                v-model:checked="state.selected"
+                                v-model:checked="form.documents"
                             />
                         </div>
                         <div
