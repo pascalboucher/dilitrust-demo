@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Document;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Arr;
 
 class DocumentPolicy
 {
@@ -19,6 +20,7 @@ class DocumentPolicy
      */
     public function view(User $user, Document $document)
     {
+        return false;
         return $document->user_id === $user->id;
     }
 
@@ -26,11 +28,14 @@ class DocumentPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\Models\User  $user
-     * @param  \App\Models\Document  $document
+     * @param   array $ids
      * @return \Illuminate\Auth\Access\Response|bool
      */
-    public function delete(User $user, Document $document)
+    public function delete(User $user, array $ids)
     {
-        // validate that every document id in list belong to user
+        $documentsOwned = Document::whereIn('slug', $ids)
+                            ->where('user_id', $user->id)->count();
+
+        return $documentsOwned === count($ids);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyDocumentRequest;
 use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Resources\DocumentResource;
 use App\Models\Document;
@@ -13,16 +14,6 @@ use Illuminate\Support\Str;
 
 class DocumentController extends Controller
 {
-    /**
-     * Instantiate a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('can:view,document')->only('show');
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -78,17 +69,21 @@ class DocumentController extends Controller
      */
     public function show(Document $document)
     {
+        $this->authorize('view', $document);
+
         return Storage::download($document->path);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\DestroyDocumentRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(DestroyDocumentRequest $request)
     {
+        $this->authorize('delete', [Document::class, $request->documents]);
+
         Document::whereIn('slug', $request->documents)->delete();
 
         return Redirect::route('documents.index')
