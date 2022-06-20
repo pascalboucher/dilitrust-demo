@@ -18,7 +18,6 @@ class DocumentResource extends JsonResource
             'id' => $this->slug,
             'name' => $this->name,
             'size' => $this->size,
-            'path' => $this->path,
         ];
     }
 }

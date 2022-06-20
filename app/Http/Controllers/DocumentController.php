@@ -7,11 +7,22 @@ use App\Http\Resources\DocumentResource;
 use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
 
 class DocumentController extends Controller
 {
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('can:view,document')->only('show');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -67,7 +78,7 @@ class DocumentController extends Controller
      */
     public function show(Document $document)
     {
-        // download file here
+        return Storage::download($document->path);
     }
 
     /**

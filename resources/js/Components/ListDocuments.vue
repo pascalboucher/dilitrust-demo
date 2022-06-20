@@ -100,17 +100,18 @@ const hasDocuments = computed(() => {
                             {{ document.size }}
                         </div>
                         <div class="flex items-center justify-center">
-                            <Link
-                                :href="route('home')"
-                                method="get"
-                                as="button"
-                                type="button"
+                            <a
+                                :href="
+                                    route('documents.show', {
+                                        document: document.id,
+                                    })
+                                "
                             >
                                 <font-awesome-icon
                                     icon="fa-solid fa-download"
                                     class="fa-xl hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                 />
-                            </Link>
+                            </a>
                         </div>
                         <hr
                             class="col-span-2 sm:col-span-7"
