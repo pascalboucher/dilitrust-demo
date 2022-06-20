@@ -3,24 +3,11 @@ import { reactive, computed, watch } from "vue";
 import { Link } from "@inertiajs/inertia-vue3";
 import Checkbox from "@/Components/Checkbox.vue";
 
+const props = defineProps({
+    documents: Array,
+});
+
 const state = reactive({
-    files: [
-        {
-            id: 1,
-            name: "My document.pdf",
-            size: "10 mb",
-        },
-        {
-            id: 2,
-            name: "image.jpg",
-            size: "15 mb",
-        },
-        {
-            id: 3,
-            name: "photo.png",
-            size: "1 mb",
-        },
-    ],
     selected: [],
     selectAll: false,
 });
@@ -28,20 +15,20 @@ const state = reactive({
 watch(
     () => state.selected,
     (selected) => {
-        state.selectAll = selected.length === state.files.length;
+        state.selectAll = selected.length === props.documents.length;
     }
 );
 
 const updateCheckboxes = (e) => {
     if (e.target.checked) {
-        state.selected = state.files.map((file) => file.id);
+        state.selected = props.documents.map((document) => document.id);
     } else {
         state.selected = [];
     }
 };
 
-const lastFileIndex = computed(() => {
-    return state.files.length - 1;
+const lastDocumentIndex = computed(() => {
+    return props.documents.length - 1;
 });
 
 const hasSelections = computed(() => {
@@ -49,7 +36,7 @@ const hasSelections = computed(() => {
 });
 
 const hasDocuments = computed(() => {
-    return state.files.length > 0;
+    return props.documents.length > 0;
 });
 </script>
 
@@ -92,22 +79,25 @@ const hasDocuments = computed(() => {
                 <div
                     class="grid grid-cols-2 sm:grid-cols-7 gap-4 px-2 py-4 border border-2 border-t-0 bg-white"
                 >
-                    <template v-for="(file, index) in state.files" :key="index">
+                    <template
+                        v-for="(document, index) in props.documents"
+                        :key="index"
+                    >
                         <div class="flex items-center justify-center border-r">
                             <Checkbox
-                                :value="file.id"
+                                :value="document.id"
                                 v-model:checked="state.selected"
                             />
                         </div>
                         <div
                             class="flex items-center justify-center sm:border-r sm:col-span-3"
                         >
-                            {{ file.name }}
+                            {{ document.name }}
                         </div>
                         <div
                             class="flex items-center justify-center border-r sm:col-span-2"
                         >
-                            {{ file.size }}
+                            {{ document.size }}
                         </div>
                         <div class="flex items-center justify-center">
                             <Link
@@ -124,7 +114,7 @@ const hasDocuments = computed(() => {
                         </div>
                         <hr
                             class="col-span-2 sm:col-span-7"
-                            v-if="index < lastFileIndex"
+                            v-if="index < lastDocumentIndex"
                         />
                     </template>
                 </div>

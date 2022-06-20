@@ -1,9 +1,9 @@
 <script setup>
 import { computed, ref } from "vue";
+import { Head, Link, usePage } from "@inertiajs/inertia-vue3";
 import { useTimeout } from "vue-composable";
 import AuthenticatedLayout from "@/Layouts/Authenticated.vue";
 import ValidationErrors from "@/Components/ValidationErrors.vue";
-import { Head, Link } from "@inertiajs/inertia-vue3";
 import ListDocuments from "@/Components/ListDocuments.vue";
 
 const props = defineProps({
@@ -22,6 +22,7 @@ if (props.status) {
 }
 
 const errors = computed(() => usePage().props.value.errors);
+const hasErrors = computed(() => Object.keys(errors.value).length > 0);
 </script>
 
 <template>
@@ -62,6 +63,6 @@ const errors = computed(() => usePage().props.value.errors);
             </div>
         </div>
 
-        <ListDocuments />
+        <ListDocuments :documents="documents" />
     </AuthenticatedLayout>
 </template>

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDocumentRequest;
+use App\Http\Resources\DocumentResource;
 use App\Models\Document;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Illuminate\Support\Str;
@@ -13,15 +15,15 @@ class DocumentController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        // make policies for who can view the file
-        // make api responses for documents
+        $documents = $request->user()->documents()->latest()->get();
 
         return Inertia::render('Document/Index', [
-            'documents' => [1,2,3], 
+            'documents' => DocumentResource::collection($documents), 
             'status' => session('status'),
         ]);
     }
@@ -45,7 +47,7 @@ class DocumentController extends Controller
     public function store(StoreDocumentRequest $request)
     {
         $document = new Document([
-            'name' => Str::of($request->file->getClientOriginalName())->limit(20),
+            'name' => Str::of($request->file->getClientOriginalName())->limit(40),
             'type' => $request->file->extension(),
             'size' => $request->file->getSize(),
             'path' => $request->file->store('documents', ['visibility' => 'private']),
