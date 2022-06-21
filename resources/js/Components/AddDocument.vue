@@ -23,6 +23,7 @@ const onFileChange = (e) => {
 const removePreview = (e) => {
     fileType.value = "";
     url.value = "";
+    form.file = null;
 };
 </script>
 
