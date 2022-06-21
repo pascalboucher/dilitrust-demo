@@ -43,9 +43,17 @@ defineProps({
         <div class="my-14 nx-6">
             <h1 class="text-6xl text-center">Dilitrust demo</h1>
 
-            <div class="flex justify-center mt-4 items-center">
-                <div class="ml-4 text-center text-sm sm:ml-0 text-gray-700">
+            <div class="flex flex-col justify-center mt-4 items-center">
+                <div class="text-center text-sm text-gray-700">
                     Laravel v{{ laravelVersion }} (PHP v{{ phpVersion }})
+                </div>
+                <div class="text-center text-sm text-gray-700 mt-2">
+                    Made by
+                    <a
+                        href="https://github.com/pascalboucher"
+                        class="ml-1 text-sky-500 hover:text-gray-700 transition ease-in-out duration-150"
+                        >Pascal Boucher</a
+                    >
                 </div>
             </div>
         </div>
