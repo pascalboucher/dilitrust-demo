@@ -20,7 +20,6 @@ class DocumentPolicy
      */
     public function view(User $user, Document $document)
     {
-        return false;
         return $document->user_id === $user->id;
     }
 
