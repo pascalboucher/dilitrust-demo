@@ -23,13 +23,11 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
-Route::middleware(['auth'])->group(function () {
-    Route::resource('documents', DocumentController::class)->except([
-        'edit', 'update', 'destroy'
-    ]);
-    
-    Route::delete('documents', [DocumentController::class, 'destroy'])
-        ->name('documents.destroy');
-});
+Route::resource('documents', DocumentController::class)->except([
+    'edit', 'update', 'destroy'
+]);
+
+Route::delete('documents', [DocumentController::class, 'destroy'])
+    ->name('documents.destroy');
 
 require __DIR__.'/auth.php';
